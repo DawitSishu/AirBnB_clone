@@ -12,6 +12,10 @@ class BaseModel:
     """
     the base model in which other classd can inherit from
     """
+    email = ""
+    password = ""
+    first_name = ""
+    last_name = ""
     def __init__(self, *args, **kwargs):
         """ initialises the calss model"""
         if kwargs:
