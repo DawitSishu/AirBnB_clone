@@ -5,30 +5,38 @@ a filestorage to store data
 
 import json
 from models.base_model import BaseModel
-from os.path import exists
+import datetime
+import os
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class FileStorage:
+    """
+    main filestorage engine class
+    """
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
         """Returns the dictionary __objects."""
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """sets the dictionary object id."""
-        key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        self.__objects[key] = obj
+        if obj:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            FileStorage.__objects[key] = obj
 
     def save(self):
         """sterilize object to json"""
-        serialized_objects = {}
-        for key, obj in self.__objects.items():
-            serialized_objects[key] = obj.to_dict()
-
-        with open(self.__file_path, 'w') as file:
-            json.dump(serialized_objects, file)
+        with open(FileStorage.__file_path, encoding='utf-8', mode='w') as file:
+            new_d = {k: v.to_dict() for k, v in FileStorage.__objects.items()}
+            json.dump(new_d, file)
 
     def reload(self):
         """deserilizes the json if it exists"""
